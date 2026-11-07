@@ -2,17 +2,23 @@
 
 [中文](README.zh.md)
 
-The presets LOCachy offers for its containers: one `apps/NAME.conf` each
-(Edge, Firefox, WeChat and the others). A LOCachy system takes them as its
-catalog of app presets, apart from its own source; the system's updater and
-installer fetch this repository, and its updates never rebuild the system.
-The host programs' presets (foot, Code - OSS) are the system's and stay in
-its source.
+The recipes LOCachy offers in its application store: one `apps/NAME.conf`
+each (Edge, Firefox, WeChat, ChatGPT and the others). A LOCachy system takes
+them as its catalog of app presets, apart from its own source; the system's
+updater and installer fetch this repository. The built-in tools' presets
+(foot, Code - OSS) stay in the system source.
 
-## Format 1
+ChatGPT is installed from its recipe in Packages, like the other apps. It
+requests real-system access for its agent and terminal. Packages shows that
+access and asks before granting it: its root/home and installed packages
+are the real system's, while its process namespace, cgroup and lifecycle
+remain managed by home. It runs as the user; sudo still needs authentication.
+Ordinary recipes remain isolated by default.
+
+## Format 2
 
 ```
-FORMAT          one line: 1
+FORMAT          one line: 2
 apps/NAME.conf  a preset
 ```
 
@@ -31,10 +37,15 @@ file of at most 16 KiB, UTF-8.
 | `directories` | more directories of the home, absolute, separated by colons |
 | `desktop` | `.desktop` file names, separated by spaces |
 | `x11` | `1`: the shared X server too |
+| `host` | `1`: request real-system access; absent or `0`: isolated |
 
-No value may hold `"`, `\`, `$`, a backquote or a control character. `host=`
-is refused: a host program is the system's. The system rejects the whole
-catalog for the first file that breaks a rule and keeps the one it has.
+No value may hold `"`, `\`, `$`, a backquote or a control character. The
+system rejects the whole catalog for the first file that breaks a rule and
+keeps the one it has.
+
+Format 2 adds the `host` request. Update LOCachy first: an older system
+refuses format 2 visibly and keeps its previous catalog. The current system
+also reads format 1, which still forbids `host`.
 
 ## Checking a change
 
@@ -49,8 +60,15 @@ presets, or why the system would refuse the catalog.
 
 When a system takes a new version of a preset, its configuration made from
 that preset follows the changed keys the user left as they were; keys the
-user changed stay theirs. A change of `package` or `extras` rebuilds that
-container. See `src/tools/APPS.md` in the LOCachy source.
+user changed stay theirs. Its granted `host` mode never follows automatic
+updates: a different request is shown for review in Packages, and current
+access is kept. A change of `package` or `extras` rebuilds that app (installing
+packages on the real system only when that access was already granted).
+Those packages are shared host packages; removing an app recipe does not
+uninstall them. See `src/tools/APPS.md` in the LOCachy source.
+
+Window, network and lifecycle tests are not account-login or authenticated
+agent-terminal acceptance; those need a real account and separate verification.
 
 ## License
 
