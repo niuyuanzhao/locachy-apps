@@ -15,16 +15,16 @@ are the real system's, while its process namespace, cgroup and lifecycle
 remain managed by home. It runs as the user; sudo still needs authentication.
 Ordinary recipes remain isolated by default.
 
-## Format 2
+## Format 3
 
 ```
-FORMAT          one line: 2
+FORMAT          one line: 3
 apps/NAME.conf  a preset
 ```
 
 A preset is data, never run: lines that are empty, `# comments` or
-`KEY="VALUE"`. NAME is `[a-z0-9][a-z0-9._-]{0,62}`; each file is a regular
-file of at most 16 KiB, UTF-8.
+`KEY="VALUE"`. NAME is `[a-z0-9][a-z0-9._-]{0,62}` (not `window-*`); each
+file is a regular file of at most 16 KiB, UTF-8.
 
 | Key | Value |
 | --- | --- |
@@ -33,7 +33,9 @@ file of at most 16 KiB, UTF-8.
 | `command` (required) | the program, an absolute path |
 | `arguments` | its arguments, separated by spaces |
 | `network` | `1`: on the network |
+| `tor` | `1`: full-system Tor only (refused when Tor is off; only its SocksPort is reachable) |
 | `camera` | `1`: the cameras |
+| `screencast` | `1`: screen sharing |
 | `directories` | more directories of the home, absolute, separated by colons |
 | `desktop` | `.desktop` file names, separated by spaces |
 | `x11` | `1`: the shared X server too |
@@ -43,9 +45,10 @@ No value may hold `"`, `\`, `$`, a backquote or a control character. The
 system rejects the whole catalog for the first file that breaks a rule and
 keeps the one it has.
 
-Format 2 adds the `host` request. Update LOCachy first: an older system
-refuses format 2 visibly and keeps its previous catalog. The current system
-also reads format 1, which still forbids `host`.
+Format 2 adds the `host` request; format 3 adds `tor`. Update LOCachy first:
+an older system refuses a newer format visibly and keeps its previous catalog.
+The current system also reads formats 1 and 2, which still forbid keys added
+after them.
 
 ## Checking a change
 
