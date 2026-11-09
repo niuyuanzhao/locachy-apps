@@ -33,7 +33,7 @@ file is a regular file of at most 16 KiB, UTF-8.
 | `command` (required) | the program, an absolute path |
 | `arguments` | its arguments, separated by spaces |
 | `network` | `1`: on the network |
-| `tor` | `1`: full-system Tor only (refused when Tor is off; only its SocksPort is reachable) |
+| `tor` | `1`: requires full-system Tor and its SocksPort-only cgroup firewall; Tor Browser (`tor-browser-bin`) alone can run its bundled Tor when the system Tor is off, after an explicit warning and confirmation (`--own-tor`) |
 | `camera` | `1`: the cameras |
 | `screencast` | `1`: screen sharing |
 | `directories` | more directories of the home, absolute, separated by colons |

@@ -28,7 +28,7 @@ apps/NAME.conf  一份预设
 | `command`（必需） | 程序，绝对路径 |
 | `arguments` | 其参数，空格分隔 |
 | `network` | `1`：联网 |
-| `tor` | `1`：仅允许全局 Tor（Tor 未开启时拒绝启动；仅其 SocksPort 可达） |
+| `tor` | `1`：要求全局 Tor 及仅允许其 SocksPort 的 cgroup 防火墙；只有 Tor Browser（`tor-browser-bin`）可在全局 Tor 关闭时，明确警告并经用户确认（`--own-tor`）后运行自带 Tor |
 | `camera` | `1`：使用摄像头 |
 | `screencast` | `1`：允许屏幕共享 |
 | `directories` | 主目录中更多的目录，绝对路径，冒号分隔 |
